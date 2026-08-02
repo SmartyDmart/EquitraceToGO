@@ -92,8 +92,7 @@ func TestParse(t *testing.T) {
 		}{
 			{text: "a,\"b\"\",c\n1,2,3", expected: [2]int{0, 5}},
 			{text: "a,\"b\",c\n1,\"2\"\",", expected: [2]int{1, 5}},
-			{text: "a,\"b,c\n1,2,", expected: [2]int{0, 2}},
-		}
+			{text: "a,\"b,c\n1,2,", expected: [2]int{0, 2}},			{text: "abc\"d", expected: [2]int{0, 3}},		}
 
 		for _, tc := range tests {
 			name := fmt.Sprintf("%s => ParseError(%d, %d)", strings.ReplaceAll(tc.text, "\n", "<NL>"), tc.expected[0], tc.expected[1])

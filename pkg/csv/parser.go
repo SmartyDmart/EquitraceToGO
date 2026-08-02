@@ -173,7 +173,7 @@ func (p *Parser) Parse(text string) ([]Row, error) {
 				quoteStartLine = line
 				quoteStartColumn = column
 			} else {
-				cell += current
+				return nil, &ParseError{Line: line, Column: column}
 			}
 		case p.options.fieldSeparator():
 			row = append(row, cell)
