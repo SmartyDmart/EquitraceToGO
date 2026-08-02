@@ -1,0 +1,42 @@
+# pre-commit:
+#   commands:
+#     linter:
+#       run: golangci-lint run
+
+# ====================================================================================
+# LEFTHOOK AUTOMATION (Go replacement for Husky, Commitlint, & Lint-Staged)
+# ====================================================================================
+
+# 1. Replicates husky/commit-msg (Enforces conventional commit message syntax guidelines)
+commit-msg:
+  commands:
+    commitlint:
+      run: npx --no -- commitlint --edit {1}
+
+# 2. Replicates husky/pre-commit & lint-staged (Executes fast verification metrics before staging snapshot blocks)
+pre-commit:
+  parallel: false
+  commands:
+    # Runs your quality and formatting routines natively via your global link
+    quality-formatting-audit:
+      run: make prebuild
+    # Runs your test suites locally to ensure no breaks (replaces npm test)
+    unit-tests:
+      run: make test
+    # Reusable structural compilation check (replaces npm run build)
+    build-check:
+      run: make build
+
+# 3. Replicates husky/pre-push (Runs exhaustive testing environments before sharing data out to git hosts)
+pre-push:
+  parallel: false
+  commands:
+    # Full workspace environment cleanup reset (replaces npm run clear)
+    environment-reset:
+      run: make clear
+    # Re-runs strict code optimization checks and updates test profiles
+    pipeline-validation:
+      run: make prebuild && make test
+    # Heavy dockerized architectural structural evaluation matrix (replaces npm run codeclimate)
+    static-infrastructure-audit:
+      run: make codeclimate

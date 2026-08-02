@@ -1,0 +1,29 @@
+name: Release CI
+
+on:
+  release:
+    types:
+      - edited
+
+env:
+  CI: true
+  GITHUB_BRANCH: ${{ github.ref }}
+  GITHUB_HEAD_REF: ${{ github.head_ref }}
+  GITHUB_BASE_REF: ${{ github.base_ref }}
+  GITHUB_COMMIT: ${{ github.sha }}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Go Production Pipeline Tools Environment
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+      - name: Verify Module Clean Integration Compilation Status Before Shipping
+        run: go test -v ./...
+      - name: Publish Module Code Version Tracking Out to Official Go Proxy Ecosystem
+        run: |
+          # Replicates npm publish behavior by index tracking module packages
+          GOPROXY=proxy.golang.org go list -m ://github.com

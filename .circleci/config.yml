@@ -1,0 +1,19 @@
+version: 2.1
+jobs:
+  lint-and-test:
+    docker:
+      - image: cimg/go:1.21 # Change to your Go version
+    steps:
+      - checkout
+      - run:
+          name: Run Go Linter
+          command: |
+            curl -sSfL https://githubusercontent.com | sh -s -- -b $(go env GOPATH)/bin v1.55.2
+            golangci-lint run
+      - run:
+          name: Run Tests
+          command: go test -v ./...
+workflows:
+  run-pipeline:
+    jobs:
+      - lint-and-test

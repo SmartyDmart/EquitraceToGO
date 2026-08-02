@@ -1,0 +1,45 @@
+name: Master CI
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  CI: true
+  GITHUB_BRANCH: ${{ github.ref }}
+  GITHUB_HEAD_REF: ${{ github.head_ref }}
+  GITHUB_BASE_REF: ${{ github.base_ref }}
+  GITHUB_COMMIT: ${{ github.sha }}
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        go-version: ['1.20', '1.21']
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Go ${{ matrix.go-version }} on ${{ matrix.os }}
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Run Suite Tests
+        run: go test -v -coverprofile=coverage.out -covermode=atomic ./...
+      - name: Package Module Artifact Compilation Checking Execution
+        run: go build -v ./pkg/csv
+      - name: Create Go Git Release Automation Integration Tag
+        if: matrix.os == 'ubuntu-latest' && matrix.go-version == '1.21'
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v0.0.13
+          release_name: v0.0.13 Release
+          body: |
+            Go CSV Parsing Engine Distribution Build Release
+          draft: true
+          prerelease: false

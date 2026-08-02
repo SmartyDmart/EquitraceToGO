@@ -1,0 +1,52 @@
+# ====================================================================================
+# GOLANGCI-LINT CONFIGURATION (Direct YAML translation of your ESLint rules)
+# ====================================================================================
+
+run:
+  concurrency: 4
+  timeout: 5m
+  issues-exit-code: 1
+  tests: true # Replicates "env": { "jest": true } by scanning test files
+
+linters:
+  disable-all: true
+  enable:
+    # Replicates "@typescript-eslint" & base rules
+    - govet       # Catches static bugs, security gaps, and coding mistakes
+    - staticcheck # Industry-standard code optimization and safety checks
+    - errcheck    # Error tracking (ensures your code handles return errors)
+    
+    # Replicates "plugin:prettier/recommended"
+    - gofmt       # Standard Go style formatting
+    - gofumpt     # A stricter version of gofmt (Acts exactly like Prettier)
+    
+    # Replicates "sort-imports" rule block
+    - goimports   # Auto-adds missing imports and deletes unused ones
+    - gci         # Strictly controls, structures, and aligns import blocks
+    
+    # Replicates "plugin:jest/recommended"
+    - testifylint # Pinpoints flawed or anti-pattern logic inside your unit tests
+    
+    # Replicates "plugin:unicorn/recommended" (Opinionated style linters)
+    - gocritic    # Flags architectural advice, stylistic micro-fixes, and code bugs
+
+linters-settings:
+  # Matches your custom "sort-imports" setup
+  gci:
+    sections:
+      - standard # Built-in Go libraries first
+      - default  # Third-party community packages second
+  
+  # Fine-tunes opinionated code styles (like unicorn)
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - style
+      - performance
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  exclude-dirs:
+    - dist
+    - vendor

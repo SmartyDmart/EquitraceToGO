@@ -1,0 +1,25 @@
+version: 2
+updates:
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    labels:
+      - 'github dependencies'
+    commit-message:
+      prefix: 'github-actions'
+    assignees:
+      - 'gregoranders'
+    target-branch: 'development'
+
+  - package-ecosystem: 'gomod'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    labels:
+      - 'go dependencies'
+    commit-message:
+      prefix: 'go'
+    assignees:
+      - 'gregoranders'
+    target-branch: 'development'
