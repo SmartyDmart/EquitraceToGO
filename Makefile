@@ -2,7 +2,7 @@
 # PROJECT AUTOMATION (Go translation of package.json scripts)
 # ====================================================================================
 
-.PHONY: all clear prebuild build postbuild test script lint codeclimate help
+.PHONY: all clear prebuild build postbuild test test-report script lint codeclimate help
 
 # Variables
 BINARY_NAME=go-csv
@@ -35,6 +35,13 @@ test:
 	go test -v -coverprofile=coverage.out -covermode=atomic ./...
 	go tool cover -html=coverage.out -o $(COVERAGE_DIR)/index.html
 	@echo "Coverage report written to $(COVERAGE_DIR)/index.html"
+
+## test-report: Execute the full test suite and save a JSON test report
+REPORT_DIR=test/report
+test-report:
+	mkdir -p $(REPORT_DIR)
+	go test -json ./... | tee $(REPORT_DIR)/test-report.json
+	@echo "JSON test report written to $(REPORT_DIR)/test-report.json"
 
 ## script: Compile source package tools using your root main entry point if available
 script:
